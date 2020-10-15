@@ -3,6 +3,22 @@ import socket
 import select
 
 ## create UDP socket in order to connect to central server
+msgFromClient       = "\nThis is Major Tom to Ground Control\nI'm stepping through the door"
+bytesToSend         = str.encode(msgFromClient)
+
+serverAddressPort   = ("127.0.0.1", 20001)
+bufferSize          = 1024
+
+# Create a UDP socket at client side
+UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+# Send to server using created UDP socket
+UDPClientSocket.sendto(bytesToSend, serverAddressPort)
+
+msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+
+msg = "Message from Server {}".format(msgFromServer[0])
+print(msg)
 
 ## create PDU
 
@@ -50,6 +66,7 @@ def download_socket ():
 
 ## main driver 
 ## ask user for input and answers user's requests according to input
+command = 0
 while True:
     ## based on user input:
     ## O -> get files list from central server -> ask user for a file -> download that file
