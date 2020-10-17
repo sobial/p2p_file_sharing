@@ -1,8 +1,8 @@
-
+import binascii
 import socket                                           
                                 
 ## create UDP socket
-localIP     = "127.0.0.1"
+localIP     = "127.0.0.2"
 localPort   = 20001
 bufferSize  = 1024
 
@@ -18,10 +18,32 @@ UDPServerSocket.bind((localIP, localPort))
 print("UDP server up and listening")
 
 # Listen for incoming datagrams
-while(True):
+
+## create PDU 
+
+## this function converts recieved binary data to PDU
+def binary_to_pdu (binary_data):
+    print(binary_data)
+    n = int(binary_data, 2)
+
+    recieved_message = binascii.unhexlify('%x' % n)
+
+    return recieved_message
+
+## this function converts PDU to binary data
+## so we are able to send it through socket
+def pdu_to_binary (pdu):
+    pass
+
+pdu_type = "R"
+while True:
+    
+    ## Recieve messages from client (UDP socket)
+    ## convert recieved binary data to PDU
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
 
-    message = bytesAddressPair[0]
+    bin_recived_message = bytesAddressPair[0]
+    message = binary_to_pdu(bin_recived_message)
 
     address = bytesAddressPair[1]
 
@@ -33,28 +55,12 @@ while(True):
 
     # Sending a reply to client
     UDPServerSocket.sendto(bytesToSend, address)   
-
-## create PDU 
-
-## this function converts recieved binary data to PDU
-def binary_to_pdu (binary_data):
-    pass
-
-## this function converts PDU to binary data
-## so we are able to send it through socket
-def pdu_to_binary (pdu):
-    pass
-
-
-while True:
-    
-    ## Recieve messages from client (UDP socket)
-    ## convert recieved binary data to PDU
     
     ##extract pdu_type
  
     ## if the pair wants to register file
     if pdu_type == 'R':
+        print('r')
         pass
         
     ## if the pait wants to remove a file

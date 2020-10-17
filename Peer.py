@@ -1,34 +1,24 @@
-
+import binascii
 import socket                                           
 import select
 
 ## create UDP socket in order to connect to central server
-msgFromClient       = "\nThis is Major Tom to Ground Control\nI'm stepping through the door"
-bytesToSend         = str.encode(msgFromClient)
-
-serverAddressPort   = ("127.0.0.1", 20001)
+serverAddressPort   = ("127.0.0.2", 20001)
 bufferSize          = 1024
 
-# Create a UDP socket at client side
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-# Send to server using created UDP socket
-UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-
-msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-
-msg = "Message from Server {}".format(msgFromServer[0])
-print(msg)
-
 ## create PDU
-
-
+def make_pdu (type , data):
+    pdu = type + data
+    return pdu
 
 def binary_to_pdu (binary_pdu):
     pass
 
 def pdu_to_binary (pdu):
-    pass
+    res = bin(int(binascii.hexlify(pdu), 16))
+    return res
 
 def select_file_name():
     pass
@@ -45,8 +35,16 @@ def download_file(filename, ip, port):
     ## recieve file (E,C or L type PDUs)
     pass
 
+# msgFromClient       = "\nThis is Major Tom to Ground Control\nI'm stepping through the door"
+# bytesToSend         = str.encode(msgFromClient)
 
+# Send to server using created UDP socket
+# UDPClientSocket.sendto(make_pdu( "R", bytesToSend), serverAddressPort)
 
+# msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+
+# msg = "Message from Server {}".format(msgFromServer[0])
+# print(msg)
 
 
 ## create TCP socket listening to other peers requesting files in this peer
@@ -66,8 +64,11 @@ def download_socket ():
 
 ## main driver 
 ## ask user for input and answers user's requests according to input
-command = 0
+# command = raw_input("enter your command:\n")
+# print(command)
+command = 'R'
 while True:
+
     ## based on user input:
     ## O -> get files list from central server -> ask user for a file -> download that file
     ## L -> get local files 
@@ -87,7 +88,21 @@ while True:
         pass
 
     elif command == 'R':
-        pass
+        # file_name = raw_input("enter file name\n")
+        file_name = 'fdsgfh.mkv'
+       
+        my_addr = str(socket.gethostbyname(socket.gethostname()))
+
+        pdu = make_pdu('R', file_name + my_addr)
+        bin_pdu = pdu_to_binary (pdu)
+
+        UDPClientSocket.sendto(bin_pdu, serverAddressPort)
+        
+        msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+
+        msg = "Message from Server: {}".format(msgFromServer[0])
+        print(msg)
+        break
 
     if command == 'U':
         pass
