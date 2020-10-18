@@ -1,14 +1,17 @@
 import binascii
 class raw_pdu:
     def __init__(self, data='', t='' , bin_pdu=''):
-        print(bin_pdu)
+        # print(bin_pdu)
         if bin_pdu == '':
             self.t = t
             self.data = data
             self.bin = self.pdu_to_binary()
         else :
             self.bin = bin_pdu
+            # print(bin_pdu[:7])
             self.t = self.binary_to_char(binar=bin_pdu[:7])
+            # print('******')
+            # print(self.t)
             self.data = self.binary_to_char(binar=bin_pdu[8:])
 
 
@@ -21,7 +24,8 @@ class raw_pdu:
         return res
 
     def binary_to_char (self , binar):
-        print(binar)
+        # print('binar is: ', binar)
+        # print(type(binar))
         n = int(str(binar), 2)
 
         recieved_message = binascii.unhexlify('%x' % n)
@@ -29,7 +33,9 @@ class raw_pdu:
 
 
     def pdu_to_binary (self):
-        res = bin(int(binascii.hexlify(self.t + self.data), 16))
+        # print(type(self.t + self.data))
+        ingredients = self.t + self.data
+        res = bin(int(binascii.hexlify(ingredients.encode()), 16))
         return res
 
 
@@ -99,6 +105,6 @@ class L_type(raw_pdu):
             self.data = bin_data[8:]
 
 
-r = R_type(bin_data= '101001001100100011001110110011001101000011001110110101001101000011010110110110001101010011001100110100001100111011001100110010001110011011001100110011101101000')
+r = R_type(ip='1234578' , port='12345', file_name='fgdfhgdfbdf')
 print(r.ip)
 print(r.port)

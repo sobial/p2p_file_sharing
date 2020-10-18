@@ -1,13 +1,13 @@
 import binascii
-import socket
-import pdu                                           
+import socket                                     
 import resource
+from pdu import raw_pdu , A_type , R_type
             
 file_list = []
 
 ## create UDP socket
-localIP     = "127.0.0.1"
-localPort   = 8888
+localIP     = "127.0.0.2"
+localPort   = 20001
 bufferSize  = 1024
 
 msgFromServer       = "\nGround Control to Major Tom\nYou're off your course\nDirection's wrong"
@@ -46,30 +46,33 @@ while True:
     ## convert recieved binary data to PDU
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
 
-    bin_recived_message = bytesAddressPair[0]
-    message = binary_to_pdu(bin_recived_message)
+    bin_recived_message = bytesAddressPair[0].decode()
+    # print(bin_recived_message)
+    # print('here')
+    # message = binary_to_pdu(bin_recived_message)
 
     address = bytesAddressPair[1]
 
-    clientMsg = "Message from Client:{}".format(message)
-    clientIP  = "Client IP Address:{}".format(address)
+    # clientMsg = "Message from Client:{}".format(message)
+    # clientIP  = "Client IP Address:{}".format(address)
     
-    print(clientMsg)
-    print(clientIP)
+    # print(clientMsg)
+    # print(clientIP)
 
     # Sending a reply to client
     # UDPServerSocket.sendto(bytesToSend, address)   
     
     ##extract pdu_type
-    pdu = raw_pdu(bin_pdu=clientMsg)
-    pdu_type = pdu.type
+    pdu = raw_pdu(bin_pdu=bin_recived_message)
+    pdu_type = pdu.t
+    # print(pdu_type)
 
     ## if the pair wants to register file
     if pdu_type == 'R':
         r_pdu = R_type(bin_data=clientMsg)
         entry = (r_pdu.ip + r_pdu.port, r_pdu.file_name)
         file_list.append(entry)
-
+        print('register message from client: ' , entry)
         a_pdu = A_type()
         UDPServerSocket.sendto(a_pdu.bin, address) 
         pass

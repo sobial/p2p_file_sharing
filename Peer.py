@@ -1,7 +1,7 @@
 import binascii
 import socket                                           
 import select
-from pdu import R_type, raw_pdu
+from pdu import R_type, raw_pdu , A_type
 
 ## create UDP socket in order to connect to central server
 serverAddressPort   = ("127.0.0.2", 20001)
@@ -98,8 +98,8 @@ while True:
         # print(str(socket.gethostbyname(socket.gethostname())))
         pdu = R_type(ip=my_ip, port=str(TCP_port), file_name=file_name)
         # pdu = make_pdu('R', file_name + my_addr)
-        bin_pdu = pdu.bin
-
+        bin_pdu = pdu.bin.encode()
+        print('r type bin pdu is ',type(bin_pdu))
         UDPClientSocket.sendto(bin_pdu, serverAddressPort)
         
         msgFromServer = UDPClientSocket.recvfrom(bufferSize)[0]
