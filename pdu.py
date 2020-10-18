@@ -32,6 +32,7 @@ class raw_pdu:
         res = bin(int(binascii.hexlify(self.t + self.data), 16))
         return res
 
+
 class R_type(raw_pdu):
     def __init__(self, file_name='', port='', ip='', bin_data=''):
         if bin_data == '':
@@ -44,6 +45,59 @@ class R_type(raw_pdu):
             self.ip = self.binary_to_char(self.bin[8:39])
             self.port = self.binary_to_char(self.bin[40:55])
             self.file_name = self.binary_to_char(self.bin[56:])
+
+class A_type(raw_pdu):
+    def __init__(self, bin_data=''):
+        if bin_data == '':
+            super().__init__(t= 'A' )
+        else:
+            super().__init__(bin_pdu = bin_data)
+
+class E_type(raw_pdu):
+    def __init__(self, bin_data='' , error_msg=''):
+        if bin_data == '':
+            super().__init__(t= 'E' )
+            self.error_msg = error_msg
+        else:
+            super().__init__(bin_pdu = bin_data)
+            self.error_msg = self.binary_to_char(bin_data[8:])
+
+class S_type(raw_pdu):
+    def __init__(self, bin_data='', data=''):
+        if bin_data == '':
+            super().__init__(t= 'S' )
+            self.data = data
+        else:
+            super().__init__(bin_pdu = bin_data)
+            self.data = self.binary_to_char(bin_data[8:])
+
+class D_type(raw_pdu):
+    def __init__(self, bin_data='' , file_name=''):
+        if bin_data == '':
+            super().__init__(t= 'D' )
+            self.file_name = file_name
+        else:
+            super().__init__(bin_pdu = bin_data)
+            self.file_name = self.binary_to_char(bin_data[8:])
+
+class F_type(raw_pdu):
+    def __init__(self, bin_data='', data =''):
+        if bin_data == '':
+            super().__init__(t= 'F' )
+            self.data = data
+        else:
+            super().__init__(bin_pdu = bin_data)
+            self.data = bin_data[8:]
+
+class L_type(raw_pdu):
+    def __init__(self, bin_data='', data =''):
+        if bin_data == '':
+            super().__init__(t= 'L' )
+            self.data = data
+        else:
+            super().__init__(bin_pdu = bin_data)
+            self.data = bin_data[8:]
+
 
 r = R_type(bin_data= '101001001100100011001110110011001101000011001110110101001101000011010110110110001101010011001100110100001100111011001100110010001110011011001100110011101101000')
 print(r.ip)
