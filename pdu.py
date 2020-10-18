@@ -7,16 +7,16 @@ class raw_pdu:
             self.data = data
             self.bin = self.pdu_to_binary()
         else :
-            
             self.bin = bin_pdu
-            self.t , self.data = self.binary_to_pdu()
+            self.t = self.binary_to_char(binar=bin_pdu[:7])
+            self.data = self.binary_to_char(binar=bin_pdu[8:])
 
 
     def binary_to_pdu (self):
         n = int(str(self.bin), 2)
 
         recieved_message = binascii.unhexlify('%x' % n)
-        res = (recieved_message[0] , recieved_message[1:] )
+        res = (recieved_message[0].decode() , recieved_message[1:])
 
         return res
 
@@ -25,7 +25,7 @@ class raw_pdu:
         n = int(str(binar), 2)
 
         recieved_message = binascii.unhexlify('%x' % n)
-        return recieved_message
+        return recieved_message.decode()
 
 
     def pdu_to_binary (self):
@@ -49,7 +49,7 @@ class R_type(raw_pdu):
 class A_type(raw_pdu):
     def __init__(self, bin_data=''):
         if bin_data == '':
-            super().__init__(t= 'A' )
+            super().__init__(t= 'A')
         else:
             super().__init__(bin_pdu = bin_data)
 

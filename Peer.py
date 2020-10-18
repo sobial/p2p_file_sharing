@@ -1,10 +1,13 @@
 import binascii
 import socket                                           
 import select
+from pdu import R_type, raw_pdu
 
 ## create UDP socket in order to connect to central server
 serverAddressPort   = ("127.0.0.2", 20001)
 bufferSize          = 1024
+
+TCP_port = 7777
 
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
@@ -89,19 +92,24 @@ while True:
 
     elif command == 'R':
         # file_name = raw_input("enter file name\n")
-        file_name = 'fdsgfh.mkv'
+        file_name = 'sobhani.mkv'
        
-        my_addr = str(socket.gethostbyname(socket.gethostname()))
-
-        pdu = make_pdu('R', file_name + my_addr)
-        bin_pdu = pdu_to_binary (pdu)
+        my_ip = str(socket.gethostbyname(socket.gethostname()))
+        # print(str(socket.gethostbyname(socket.gethostname())))
+        pdu = R_type(ip=my_ip, port=str(TCP_port), file_name=file_name)
+        # pdu = make_pdu('R', file_name + my_addr)
+        bin_pdu = pdu.bin
 
         UDPClientSocket.sendto(bin_pdu, serverAddressPort)
         
-        msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+        msgFromServer = UDPClientSocket.recvfrom(bufferSize)[0]
+        rcv_pdu = raw_pdu(bin_pdu=msgFromServer)
 
-        msg = "Message from Server: {}".format(msgFromServer[0])
-        print(msg)
+        print("HOOORAAAAAA")
+        print(rcv_pdu.type)
+
+        # msg = "Message from Server: {}".format(msgFromServer[0])
+        # print(msg)
         break
 
     if command == 'U':

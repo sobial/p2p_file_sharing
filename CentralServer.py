@@ -1,6 +1,10 @@
 import binascii
-import socket                                           
-                                
+import socket
+import pdu                                           
+import resource
+            
+file_list = []
+
 ## create UDP socket
 localIP     = "127.0.0.2"
 localPort   = 20001
@@ -54,13 +58,20 @@ while True:
     print(clientIP)
 
     # Sending a reply to client
-    UDPServerSocket.sendto(bytesToSend, address)   
+    # UDPServerSocket.sendto(bytesToSend, address)   
     
     ##extract pdu_type
- 
+    pdu = raw_pdu(bin_pdu=clientMsg)
+    pdu_type = pdu.type
+
     ## if the pair wants to register file
     if pdu_type == 'R':
-        print('r')
+        r_pdu = R_type(bin_data=clientMsg)
+        entry = (r_pdu.ip + r_pdu.port, r_pdu.file_name)
+        file_list.append(entry)
+
+        a_pdu = A_type()
+        UDPServerSocket.sendto(a_pdu.bin, address) 
         pass
         
     ## if the pait wants to remove a file
