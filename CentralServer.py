@@ -6,8 +6,8 @@ import resource
 file_list = []
 
 ## create UDP socket
-localIP     = "127.0.0.2"
-localPort   = 20001
+localIP     = "127.0.0.1"
+localPort   = 8888
 bufferSize  = 1024
 
 msgFromServer       = "\nGround Control to Major Tom\nYou're off your course\nDirection's wrong"
