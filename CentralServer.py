@@ -45,7 +45,7 @@ while True:
     ## Recieve messages from client (UDP socket)
     ## convert recieved binary data to PDU
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-
+    # print('bin pdu after recv: ' , bytesAddressPair[0])
     bin_recived_message = bytesAddressPair[0].decode()
     # print(bin_recived_message)
     # print('here')
