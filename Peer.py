@@ -102,14 +102,15 @@ while True:
 
         # pdu = make_pdu('R', file_name + my_addr)
         bin_pdu = pdu.bin.encode()
-        print('r type bin pdu is ',type(bin_pdu))
+        print('r type bin pdu is ', pdu.t)
         UDPClientSocket.sendto(bin_pdu, serverAddressPort)
         
         msgFromServer = UDPClientSocket.recvfrom(bufferSize)[0]
-        rcv_pdu = raw_pdu(bin_pdu=msgFromServer)
+        print('msg from server',msgFromServer)
+        rcv_pdu = raw_pdu(bin_pdu=msgFromServer.decode())
 
         print("HOOORAAAAAA")
-        print(rcv_pdu.type)
+        print(rcv_pdu.t)
 
         # msg = "Message from Server: {}".format(msgFromServer[0])
         # print(msg)

@@ -47,7 +47,7 @@ while True:
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     # print('bin pdu after recv: ' , bytesAddressPair[0])
     bin_recived_message = bytesAddressPair[0].decode()
-    # print(bin_recived_message)
+    print(bin_recived_message)
     # print('here')
     # message = binary_to_pdu(bin_recived_message)
 
@@ -65,16 +65,19 @@ while True:
     ##extract pdu_type
     pdu = raw_pdu(bin_pdu=bin_recived_message)
     pdu_type = pdu.t
-    # print(pdu_type)
+    print(pdu_type)
 
     ## if the pair wants to register file
     if pdu_type == 'R':
-        r_pdu = R_type(bin_data=clientMsg)
-        entry = (r_pdu.ip + r_pdu.port, r_pdu.file_name)
+        r_pdu = R_type(bin_data=bin_recived_message)
+        entry = (r_pdu.ip + r_pdu.port + r_pdu.file_name)
         file_list.append(entry)
         print('register message from client: ' , entry)
         a_pdu = A_type()
-        UDPServerSocket.sendto(a_pdu.bin, address) 
+        print(type(a_pdu.bin))
+        print(a_pdu.bin)
+
+        UDPServerSocket.sendto(a_pdu.bin.encode(), address) 
         pass
         
     ## if the pait wants to remove a file

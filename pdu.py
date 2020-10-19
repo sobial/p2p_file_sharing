@@ -10,7 +10,7 @@ class raw_pdu:
             self.bin = self.pdu_to_binary()
         else :
             self.bin = bin_pdu
-            print(bin_pdu[:7])
+            print(bin_pdu[:8])
             self.t = self.binary_to_char(binar=bin_pdu[:7])
             # print('******')
             # print(self.t)
@@ -26,11 +26,12 @@ class raw_pdu:
         return res
 
     def binary_to_char (self , binar):
-        # print('binar is: ', binar)
+        print('binar is: ', binar)
         # print(type(binar))
         n = int(str(binar), 2)
-
+        print('n is ' , n)
         recieved_message = binascii.unhexlify('%x' % n)
+        print('recv msg is ' ,recieved_message)
         return recieved_message.decode()
 
 
@@ -59,11 +60,11 @@ class R_type(raw_pdu):
             self.file_name = self.binary_to_char(self.bin[56:])
 
 class A_type(raw_pdu):
-    def __init__(self, bin_data=''):
+    def __init__(self, bin_data='011000000101110'):
         if bin_data == '':
             super().__init__(t= 'A')
         else:
-            super().__init__(bin_pdu = bin_data)
+            super().__init__(bin_pdu = bin_data ,t= 'A')
 
 class E_type(raw_pdu):
     def __init__(self, bin_data='' , error_msg=''):
