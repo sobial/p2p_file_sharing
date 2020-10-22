@@ -97,8 +97,8 @@ while True:
         my_ip = str(socket.gethostbyname(socket.gethostname()))
         # print(str(socket.gethostbyname(socket.gethostname())))
         pdu = R_type(ip=my_ip, port=str(TCP_port), file_name=file_name)
-        print('bin pdu before send: ')
-        print(pdu.bin)
+        print('data_bin before send: ')
+        print(pdu.data_bin)
 
         # pdu = make_pdu('R', file_name + my_addr)
         bin_pdu = pdu.bin.encode()

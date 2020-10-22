@@ -47,6 +47,7 @@ while True:
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     # print('bin pdu after recv: ' , bytesAddressPair[0])
     bin_recived_message = bytesAddressPair[0].decode()
+    print('pdu recived')
     print(bin_recived_message)
     # print('here')
     # message = binary_to_pdu(bin_recived_message)
@@ -72,10 +73,15 @@ while True:
         r_pdu = R_type(bin_data=bin_recived_message)
         entry = (r_pdu.ip + r_pdu.port + r_pdu.file_name)
         file_list.append(entry)
-        print('register message from client: ' , entry)
+        print('register message from client: ' ,r_pdu.ip)
+        print('port message from client: ' ,r_pdu.port)
+        print('file name message from client: ' ,r_pdu.file_name)
+
+
         a_pdu = A_type()
         print(type(a_pdu.bin))
         print(a_pdu.bin)
+        print(a_pdu.t)
 
         UDPServerSocket.sendto(a_pdu.bin.encode(), address) 
         pass
