@@ -101,7 +101,7 @@ while True:
         print(pdu.data_bin)
 
         # pdu = make_pdu('R', file_name + my_addr)
-        bin_pdu = pdu.bin.encode()
+        bin_pdu = pdu.data_bin.encode()
         print('r type bin pdu is ', pdu.t)
         UDPClientSocket.sendto(bin_pdu, serverAddressPort)
         

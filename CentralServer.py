@@ -1,6 +1,6 @@
 import binascii
 import socket                                     
-import resource
+# import resource
 from pdu import raw_pdu , A_type , R_type
             
 file_list = []
@@ -73,7 +73,7 @@ while True:
         r_pdu = R_type(bin_data=bin_recived_message)
         entry = (r_pdu.ip + r_pdu.port + r_pdu.file_name)
         file_list.append(entry)
-        print('register message from client: ' ,r_pdu.ip)
+        print('ip message from client: ' ,r_pdu.ip)
         print('port message from client: ' ,r_pdu.port)
         print('file name message from client: ' ,r_pdu.file_name)
 

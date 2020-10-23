@@ -27,12 +27,12 @@ class raw_pdu:
         return res
 
     def binary_to_char (self , binar):
-        print('binar is: ', binar)
-        print(type(binar))
+        # print('binar is: ', binar)
+        # print(type(binar))
         n = int(str(binar), 2)
-        print('n is ' , n)
+        # print('n is ' , n)
         recieved_message = binascii.unhexlify('%x' % n)
-        print('recv msg is ' ,recieved_message)
+        # print('recv msg is ' ,recieved_message)
         return recieved_message.decode()
 
 
@@ -53,7 +53,7 @@ class raw_pdu:
             # print(o , bina)
             temp += bina
             # print(temp)
-        print( 'temp is: ',temp)
+        # print( 'temp is: ',temp)
         return temp
 
 
@@ -66,7 +66,7 @@ class raw_pdu:
             # print(o , bina)
             temp += bina
             # print(temp)
-        print( 'temp is: ',temp)
+        # print( 'temp is: ',temp)
 
         return temp 
 
@@ -96,6 +96,7 @@ class R_type(raw_pdu):
             self.ip_bin = self.ip_to_binary(ip)
             print('ip bin: ' , self.ip_bin)
             self.port = port
+            print('port: ', self.port)
             self.port_bin = format(int(port) , '016b')
             print('port bin: ' , self.port_bin)
 
@@ -107,25 +108,28 @@ class R_type(raw_pdu):
 
         else:
             super().__init__(bin_pdu = bin_data)
-            self.ip = self.binary_to_ip(self.bin[8:39])
+            self.ip = self.binary_to_ip(self.bin[8:40])
             print(self.bin[8:39])
             print('ip is: ' , self.ip)
-            self.port = self.binary_to_char(self.bin[40:56])
+            self.port = str(int(self.bin[40:56] , 2))
+            print('bin port is: ' , self.bin[40:56])
             self.file_name = self.binary_to_char(self.bin[56:])
 
     #gets ip as string and convert it to 32-bit binary: '127.0.1.1' -> '01010101010'
     def ip_to_binary (self , ip ):
-        range_arr = self.ip.split('.')
+        range_arr = ip.split('.')
         bin_ip = ''
         for i in range_arr:
-
             bina = format(int(i) , '08b')
             bin_ip += bina
         return bin_ip
+
     #gets 32-bit binary in returns string ip: '1010101010101' -> '127.0.1.1'
     def binary_to_ip (self , bin_ip):
-        ip = str(int(bin_ip[:7] , 2)) + '.' + str(int(bin_ip[8:15] , 2)) + '.' + str(int(bin_ip[16:23] , 2)) + '.' + str(int(bin_ip[24:31] , 2))
+        ip = str(int(bin_ip[:8] , 2)) + '.' + str(int(bin_ip[8:16] , 2)) + '.' + str(int(bin_ip[16:24] , 2)) + '.' + str(int(bin_ip[24:32] , 2))
         return ip
+
+
 class A_type(raw_pdu):
     def __init__(self, bin_data='0100000101000001'):
         if bin_data == '':
