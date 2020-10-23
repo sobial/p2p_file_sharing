@@ -1,7 +1,7 @@
 import binascii
 import socket                                           
 import select
-from pdu import R_type, raw_pdu , A_type
+from pdu import R_type, raw_pdu , A_type , O_type
 
 ## create UDP socket in order to connect to central server
 serverAddressPort   = ("127.0.0.2", 20001)
@@ -38,17 +38,6 @@ def download_file(filename, ip, port):
     ## recieve file (E,C or L type PDUs)
     pass
 
-# msgFromClient       = "\nThis is Major Tom to Ground Control\nI'm stepping through the door"
-# bytesToSend         = str.encode(msgFromClient)
-
-# Send to server using created UDP socket
-# UDPClientSocket.sendto(make_pdu( "R", bytesToSend), serverAddressPort)
-
-# msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-
-# msg = "Message from Server {}".format(msgFromServer[0])
-# print(msg)
-
 
 ## create TCP socket listening to other peers requesting files in this peer
 ## port must be available (not in used by the others sockets)
@@ -69,7 +58,7 @@ def download_socket ():
 ## ask user for input and answers user's requests according to input
 # command = raw_input("enter your command:\n")
 # print(command)
-command = 'R'
+command = 'O'
 while True:
 
     ## based on user input:
@@ -85,35 +74,36 @@ while True:
         ## ask user for specific file
         ## fetch that file's address from server
         ## download that file from the owner peer 
+
+        pdu = O_type()
+        #sending O_type pdu in binary
+        UDPClientSocket.sendto(pdu.bin.encode(), serverAddressPort)
+
+        msgFromServer = UDPClientSocket.recvfrom(bufferSize)[0]
+
         pass
 
     elif command == 'L':
         pass
 
     elif command == 'R':
-        # file_name = raw_input("enter file name\n")
+
         file_name = 'sobhani.mkv'
        
         my_ip = str(socket.gethostbyname(socket.gethostname()))
-        # print(str(socket.gethostbyname(socket.gethostname())))
-        pdu = R_type(ip=my_ip, port=str(TCP_port), file_name=file_name)
-        print('data_bin before send: ')
-        print(pdu.data_bin)
 
-        # pdu = make_pdu('R', file_name + my_addr)
-        bin_pdu = pdu.data_bin.encode()
-        print('r type bin pdu is ', pdu.t)
-        UDPClientSocket.sendto(bin_pdu, serverAddressPort)
+        #making R_type pdu to send
+        pdu = R_type(ip=my_ip, port=str(TCP_port), file_name=file_name)
+
+        #sending R_type pdu in binary
+        UDPClientSocket.sendto(pdu.bin.encode(), serverAddressPort)
         
+        #waiting for ack
         msgFromServer = UDPClientSocket.recvfrom(bufferSize)[0]
-        print('msg from server',msgFromServer)
+
+        #revieved pdu from server A_type or E_type        
         rcv_pdu = raw_pdu(bin_pdu=msgFromServer.decode())
 
-        print("HOOORAAAAAA")
-        print(rcv_pdu.t)
-
-        # msg = "Message from Server: {}".format(msgFromServer[0])
-        # print(msg)
         break
 
     if command == 'U':
